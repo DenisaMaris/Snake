@@ -1,6 +1,8 @@
 package snake.denisamaris.com.snake;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
@@ -40,6 +42,10 @@ public class SnakeActivity extends Activity {
     protected void onPause() {
         super.onPause();
         snakeEngine.pause();
+    }
+
+    public static void navigate(Context context) {
+        context.startActivity(new Intent(context, SnakeActivity.class));
     }
 
 

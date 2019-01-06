@@ -1,5 +1,6 @@
 package snake.denisamaris.com.snake;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Path;
@@ -88,7 +89,7 @@ public class SnakeEngine extends SurfaceView implements Runnable {
     public SnakeEngine(Context context, Point size) {
         super(context);
         this.initGestureWatcher();
-        context = context;
+        this.context = context;
 
         screenX = size.x;
         screenY = size.y;
@@ -256,8 +257,8 @@ public class SnakeEngine extends SurfaceView implements Runnable {
         if (detectDeath()) {
             //start again
             soundPool.play(snake_crash, 1, 1, 0, 0, 1);
-
-            newGame();
+            ((Activity)this.context).finish();
+            //newGame();
         }
     }
 
