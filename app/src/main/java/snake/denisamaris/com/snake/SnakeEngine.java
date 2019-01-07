@@ -3,6 +3,8 @@ package snake.denisamaris.com.snake;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.media.AudioManager;
@@ -86,6 +88,10 @@ public class SnakeEngine extends SurfaceView implements Runnable {
     // Some paint for our canvas
     private Paint paint;
 
+    private float deviceTemperature = 0.0f;
+
+    private Bitmap backgroundBitmap;
+
     public SnakeEngine(Context context, Point size) {
         super(context);
         this.initGestureWatcher();
@@ -127,8 +133,49 @@ public class SnakeEngine extends SurfaceView implements Runnable {
         snakeXs = new int[200];
         snakeYs = new int[200];
 
+
+        this.initBackgroundBitmap();
         // Start the game
         newGame();
+    }
+
+    public float getDeviceTemperature() {
+        return deviceTemperature;
+    }
+
+    public void setDeviceTemperature(float deviceTemperature) {
+        this.deviceTemperature = deviceTemperature;
+    }
+
+    public Bitmap getBackgroundBitmap() {
+        return backgroundBitmap;
+    }
+
+    public void setBackgroundBitmap(Bitmap backgroundBitmap) {
+        this.backgroundBitmap = backgroundBitmap;
+    }
+
+    private void initBackgroundBitmap() {
+        this.setBackgroundBitmap(this.getBitmapByTemperature(this.deviceTemperature));
+    }
+
+    public void onNewTemperatureReceived(float newTemp) {
+        if(newTemp == this.deviceTemperature) {
+            return;
+        }
+        this.setDeviceTemperature(newTemp);
+        this.setBackgroundBitmap(this.getBitmapByTemperature(this.deviceTemperature));
+    }
+
+    private Bitmap getBitmapByTemperature(float temp) {
+        boolean isDeviceHot = temp > 22;
+        Integer resId = null;
+        if(isDeviceHot) {
+            resId = R.drawable.hot_background;
+        } else {
+            resId = R.drawable.cold_background;
+        }
+        return BitmapFactory.decodeResource(context.getResources(), resId);
     }
 
     @Override
@@ -269,6 +316,7 @@ public class SnakeEngine extends SurfaceView implements Runnable {
 
             // Fill the screen with Game Code School blue
             canvas.drawColor(Color.argb(255, 156, 12, 26));
+            canvas.drawBitmap(this.backgroundBitmap, getMatrix(), paint);
 
             // Set the color of the paint to draw the snake white
             paint.setColor(Color.argb(255, 0, 255, 0));
