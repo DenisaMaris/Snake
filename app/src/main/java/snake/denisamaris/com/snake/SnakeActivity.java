@@ -9,19 +9,18 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.widget.Toast;
 
-public class SnakeActivity extends Activity implements SensorEventListener {
+public class SnakeActivity extends Activity implements SensorEventListener, ShakeListener.OnShakeListener {
 
     // Declare an instance of SnakeEngine
     SnakeEngine snakeEngine;
     private SensorManager mSensorManager;
     private Sensor mTempSensor;
+    private ShakeListener shakeListener;
 
-    public SnakeActivity() {
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +40,8 @@ public class SnakeActivity extends Activity implements SensorEventListener {
 
         // Make snakeEngine the view of the Activity
         setContentView(snakeEngine);
+        shakeListener = new ShakeListener(this);
+        shakeListener.setOnShakeListener(this);
     }
 
     // Start the thread in snakeEngine
@@ -72,5 +73,9 @@ public class SnakeActivity extends Activity implements SensorEventListener {
     }
 
 
+    @Override
+    public void onShake() {
+        MenuActivity.navigate(this);
+    }
 }
 
